@@ -1,26 +1,47 @@
-// Add imports above this line
-import { galleryItems } from './gallery-items';
+// Opisany w dokumentacji
 import SimpleLightbox from "simplelightbox";
+// Dodatkowy import stylów
 import "simplelightbox/dist/simple-lightbox.min.css";
-// Change code below this line
 
-const gallery = document.querySelector(".gallery");
-const galleryArray = [];
+import {galleryItems} from "./gallery-items"
 
-galleryItems.forEach(event => {
-const galleryItem = document.createElement("a");
-galleryItem.className = "gallery__item";
-galleryItem.href = event.original;
+const gallery = document.querySelector(".gallery")
+// const galleryArray = [];
+// console.log(galleryItems)
 
-const galleryImage = document.createElement("img");
-galleryImage.className = "gallery__image";
-galleryImage.src = event.preview;
-galleryImage.alt = event.description;
+//  galleryItems.map((el) => {
+//     const galleryLink = document.createElement("li")
+//     const galleryItem = document.createElement("a")
+//     const galleryImage = document.createElement("img")
 
-galleryItem.append(galleryImage);
-galleryArray.push(galleryItem);
-});
+//     galleryLink.classList.add("gallery__link")
+//     galleryItem.classList.add("gallery__item")
+//     galleryImage.classList.add("gallery__image")
 
-gallery.append(...galleryArray);
+//     galleryItem.href = el.original
 
-new SimpleLightbox('.gallery a', { captionDelay: 250 });
+//     galleryImage.src = el.preview
+//     galleryImage.alt = el.description
+
+//     galleryItem.append(galleryImage)
+//     galleryLink.append(galleryItem)
+//     galleryArray.push(galleryLink)
+    
+// })
+// console.log( "test" , galleryArray)
+// gallery.append(...galleryArray)
+
+const gallerList = galleryItems.map((el) => 
+    `
+    <li class="gallery__link">
+        <a class="gallery__item" href="${el.original}">
+            <img class="gallery__image" src="${el.preview}" alt="${el.description}" />
+        </a>
+    </li>
+    `
+).join("")
+
+gallery.insertAdjacentHTML("beforeend", gallerList)
+
+
+new SimpleLightbox('.gallery a', { captionsData: "alt" ,captionDelay: 500 });

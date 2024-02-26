@@ -1,43 +1,37 @@
-import { throttle } from 'lodash';
+const form = document.querySelector("form")
+const email = document.querySelector(`input[name="email"]`)
+const message = document.querySelector(`textarea[name="message"]`)
+const btn = document.querySelector("button")
+console.log( form, email, message, btn)
+const STORAGE_KEY = "feedback-form-state"
 
-const form = document.querySelector("form.feedback-form");
-const email = document.querySelector("input");
-const message = document.querySelector("textarea");
-const button = document.querySelector("button");
-const LOCALSTORAGE_KEY = "feedback-form-state";
+function inputHandler(){
+  const savedObj = {
+    email : email.value ,
+    message: form.elements.message.value
+  }
+localStorage.setItem(STORAGE_KEY, JSON.stringify(savedObj))
+}
+localStorage.getItem(STORAGE_KEY)
 
-form.addEventListener("input", throttle(event => {
-    const saveObject = {
-        email: form.elements.email.value,
-        message: form.elements.message.value };
-    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(saveObject));
-},500));
+function submitHandler(e){
+  e.preventDefault();
+  console.log(localStorage.getItem(STORAGE_KEY))
+  localStorage.removeItem(STORAGE_KEY)
+  form.reset();
+}
 
-form.addEventListener("submit", event => {
-    event.preventDefault();
-const {
-    elements : {
-        email,
-        message,
-    },
-} = event.currentTarget;
-
-console.log({email: email.value, message: message.value});
-event.currentTarget.reset();
-localStorage.removeItem(LOCALSTORAGE_KEY);
-});
 
 const load = key => {
-    try {
-        const serializedState = localStorage.getItem(key);
-        return serializedState === null ? undefined : JSON.parse(serializedState);
-    } catch (error) {
-        console.error("Get satate error: ", error.message);
-    }
-};
+  const serializedState = localStorage.getItem(key)
+  return serializedState === null ? undefined : JSON.parse(serializedState)
+}
 
-const userData = load(LOCALSTORAGE_KEY);
-if (userData) {
-    email.value = userData.email;
-    message.value = userData.message;
-};
+const userData = load(STORAGE_KEY)
+if(userData){
+  email.value = userData.email
+  message.value = userData.message
+}
+
+form.addEventListener("input", inputHandler)
+form.addEventListener("submit", submitHandler)
